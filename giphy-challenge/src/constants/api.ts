@@ -1,2 +1,3 @@
+export const API_KEY = import.meta.env.VITE_GIPHY_API_KEY
 export const BASE_URL = 'https://api.giphy.com/v1/stickers'
 export const ITEMS_PER_PAGE = 3
