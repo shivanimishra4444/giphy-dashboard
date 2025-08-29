@@ -14,11 +14,15 @@ interface Gif {
   }
 }
 
+type TextPosition = 'on top of image - center top' | 'on top of image - center bottom' | 'below image - center'
+
 function App() {
   const [images, setImages] = useState<Gif[]>([])
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('cats')
+  const [loading, setLoading] = useState<boolean>(false)
+  const [page, setPage] = useState<number>(0)
+  const [search, setSearch] = useState<string>('cats')
+  const [displayText, setDisplayText] = useState<string>('')
+  const [textPosition, setTextPosition] = useState<TextPosition>('on top of image - center top')
 
   const searchImages = async () => {
     setLoading(true)
@@ -53,18 +57,44 @@ function App() {
         </button>
       </div>
 
+      <div>
+        <input
+          type="text"
+          value={displayText}
+          onChange={(e) => setDisplayText(e.target.value)}
+          placeholder="Text to display"
+        />
+        <select
+          value={textPosition}
+          onChange={(e) => setTextPosition(e.target.value as TextPosition)}
+        >
+          <option value="on top of image - center top">Top Center</option>
+          <option value="on top of image - center bottom">Bottom Center</option>
+          <option value="below image - center">Below Image</option>
+        </select>
+      </div>
+
       {loading && <p>Loading...</p>}
 
       <div className="images-grid">
         {currentImages.map((gif) => (
           <div key={gif.id} className="image-card">
-            <img
-              src={gif.images.downsized_medium.url}
-              alt={gif.title}
-            />
-            <p className="image-title">
-              {gif.title}
-            </p>
+            {textPosition === 'below image - center' ? (
+              <>
+                <img src={gif.images.downsized_medium.url} alt={gif.title} />
+                {displayText && <div className="text-below">{displayText}</div>}
+              </>
+            ) : (
+              <div className="image-container">
+                <img src={gif.images.downsized_medium.url} alt={gif.title} />
+                {displayText && (
+                  <div className={`text-overlay ${textPosition.includes('top') ? 'text-overlay-top' : 'text-overlay-bottom'}`}>
+                    {displayText}
+                  </div>
+                )}
+              </div>
+            )}
+            <p className="image-title">{gif.title}</p>
           </div>
         ))}
       </div>
