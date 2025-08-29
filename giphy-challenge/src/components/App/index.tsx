@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { giphyApi } from '../../services/giphyApi'
 import { ITEMS_PER_PAGE } from '../../constants/api'
 import Pagination from '../Pagination/index'
